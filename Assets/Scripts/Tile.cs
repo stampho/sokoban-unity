@@ -15,6 +15,8 @@ public class Tile : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider collider) {
 		if (collider.gameObject.tag == "Player") {
+			Player player = collider.GetComponent<Player>();
+			player.Moved();
 			this.renderer.material.SetColor("_Color", Color.green);
 		}
 

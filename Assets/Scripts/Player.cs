@@ -4,10 +4,12 @@ using System.Collections;
 public class Player : MonoBehaviour {
 	
 	private CharacterController controller;
+	private int counter;
 
 	// Use this for initialization
 	void Start () {
 		this.controller = GetComponent<CharacterController>();
+		this.counter = -1;
 	}
 	
 	// Update is called once per frame
@@ -44,7 +46,15 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	public void OnGUI() {
+		GUI.Label (new Rect (0, 0, 100, 100), "Moves: " + counter);
+	}
+
 	public void SetPosition(Vector3 position) {
 		this.transform.position = position;
+	}
+
+	public void Moved() {
+		this.counter++;
 	}
 }
