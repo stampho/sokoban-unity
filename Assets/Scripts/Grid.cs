@@ -31,7 +31,7 @@ public class Grid : MonoBehaviour {
 		levelMap.Reverse ();
 
 		foreach (ArrayList line in levelMap) {
-			line.Reverse();
+			//line.Reverse();
 			foreach (char c in line) {
 				xOffset += distanceBetweenTiles;
 
@@ -51,11 +51,13 @@ public class Grid : MonoBehaviour {
 					float playerYPos = (player.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
 					player.SetPosition(new Vector3(newTile.transform.position.x, playerYPos, newTile.transform.position.z));
 					break;
-
 				case 'c':
 					// TODO(pvarga): YPos should be factored out
 					float crateYPos = (player.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
 					Instantiate (cratePrefab, new Vector3(newTile.transform.position.x, crateYPos, newTile.transform.position.z), transform.rotation);
+					break;
+				case 'g':
+					newTile.renderer.material.SetColor("_Color", Color.blue);
 					break;
 				}
 			}
