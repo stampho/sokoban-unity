@@ -22,7 +22,6 @@ public class Player : MonoBehaviour {
 
 	public void OnControllerColliderHit(ControllerColliderHit hit) {
 		if (hit.gameObject.tag == "Crate") {
-			//Crate crate = hit.GetComponent<Crate>();
 			Crate crate = hit.gameObject.GetComponent<Crate> ();
 
 			float power = 2.0f;
