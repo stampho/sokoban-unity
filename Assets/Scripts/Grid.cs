@@ -57,7 +57,7 @@ public class Grid : MonoBehaviour {
 					Instantiate (cratePrefab, new Vector3(newTile.transform.position.x, crateYPos, newTile.transform.position.z), transform.rotation);
 					break;
 				case 'g':
-					newTile.renderer.material.SetColor("_Color", Color.blue);
+					newTile.SetAsGoal ();
 					break;
 				}
 			}

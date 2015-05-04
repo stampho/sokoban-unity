@@ -3,9 +3,11 @@ using System.Collections;
 
 public class Tile : MonoBehaviour {
 
+	private Color color = Color.white;
+
 	// Use this for initialization
 	void Start () {
-	
+
 	}
 	
 	// Update is called once per frame
@@ -21,19 +23,18 @@ public class Tile : MonoBehaviour {
 		}
 
 		if (collider.gameObject.tag == "Crate") {
-			this.renderer.material.SetColor ("_Color", Color.red);
 			Crate crate = collider.GetComponent<Crate>();
 			crate.SetTarget(this.transform.position);
+			this.renderer.material.SetColor("_Color", Color.red);
 		}
 	}
 
 	void OnTriggerExit(Collider collider) {
-		if (collider.gameObject.tag == "Player") {
-			this.renderer.material.SetColor("_Color", Color.white);
-		}
+		this.renderer.material.SetColor("_Color", this.color);
+	}
 
-		if (collider.gameObject.tag == "Crate") {
-			this.renderer.material.SetColor("_Color", Color.white);
-		}
+	public void SetAsGoal() {
+		this.color = Color.blue;
+		this.renderer.material.SetColor ("_Color", this.color);
 	}
 }
