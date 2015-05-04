@@ -11,6 +11,8 @@ public class Grid : MonoBehaviour {
 	public Player player;
 	
 	private List<ArrayList> levelMap = new List<ArrayList>();
+	private List<Tile> goalTileList = new List<Tile>();
+	private List<Crate> crateList = new List<Crate>();
 
 	// Use this for initialization
 	void Start () {
@@ -39,12 +41,14 @@ public class Grid : MonoBehaviour {
 					continue;
 
 				Tile newTile = (Tile)Instantiate(tilePrefab, new Vector3(transform.position.x + xOffset, transform.position.y, transform.position.z + zOffset), transform.rotation);
+				newTile.transform.parent = this.transform;
 
 				switch(c) {
 				case 'w':
 					// TODO(pvarga): YPos should be factored out
 					float wallYPos = (wallPrefab.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
 					Instantiate (wallPrefab, new Vector3(newTile.transform.position.x, wallYPos, newTile.transform.position.z), transform.rotation);
+					newTile.SetAsCovered ();
 					break;
 				case 'p':
 					// TODO(pvarga): YPos should be factored out
@@ -54,9 +58,11 @@ public class Grid : MonoBehaviour {
 				case 'c':
 					// TODO(pvarga): YPos should be factored out
 					float crateYPos = (player.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
-					Instantiate (cratePrefab, new Vector3(newTile.transform.position.x, crateYPos, newTile.transform.position.z), transform.rotation);
+					Crate crate = (Crate)Instantiate (cratePrefab, new Vector3(newTile.transform.position.x, crateYPos, newTile.transform.position.z), transform.rotation);
+					this.crateList.Add (crate);
 					break;
 				case 'g':
+					this.goalTileList.Add(newTile);
 					newTile.SetAsGoal ();
 					break;
 				}
@@ -65,6 +71,26 @@ public class Grid : MonoBehaviour {
 			xOffset = 0.0f;
 			zOffset += distanceBetweenTiles;
 		}
+	}
+
+	public bool CheckWin () {
+		foreach (Tile tile in this.goalTileList) {
+			if (!tile.isCovered ())
+				return false;
+		}
+
+		Debug.Log ("YOU WON!");
+		foreach (Tile tile in this.goalTileList) {
+			tile.rigidbody.isKinematic = false;
+			tile.rigidbody.AddForce (new Vector3(0.0f, -1.0f, 0.0f));
+		}
+
+		foreach (Crate crate in this.crateList) {
+			crate.EnableFreeFall();
+			crate.rigidbody.constraints = RigidbodyConstraints.None;
+		}
+
+		return true;
 	}
 
 	// Update is called once per frame

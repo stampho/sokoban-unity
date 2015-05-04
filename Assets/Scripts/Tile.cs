@@ -4,6 +4,8 @@ using System.Collections;
 public class Tile : MonoBehaviour {
 
 	private Color color = Color.white;
+	private bool goal = false;
+	private bool covered = false;
 
 	// Use this for initialization
 	void Start () {
@@ -25,15 +27,32 @@ public class Tile : MonoBehaviour {
 		if (collider.gameObject.tag == "Crate") {
 			Crate crate = collider.GetComponent<Crate>();
 			crate.SetTarget(this.transform.position);
+			this.covered = true;
 			this.renderer.material.SetColor("_Color", Color.red);
+
+			if (this.goal) {
+				Grid grid = this.transform.GetComponentInParent<Grid>();
+				grid.CheckWin();
+			}
 		}
 	}
 
 	void OnTriggerExit(Collider collider) {
+		if (collider.gameObject.tag == "Crate")
+			this.covered = false;
 		this.renderer.material.SetColor("_Color", this.color);
 	}
 
+	public void SetAsCovered() {
+		this.covered = true;
+	}
+
+	public bool isCovered() {
+		return this.covered;
+	}
+
 	public void SetAsGoal() {
+		this.goal = true;
 		this.color = Color.blue;
 		this.renderer.material.SetColor ("_Color", this.color);
 	}

@@ -6,6 +6,7 @@ public class Crate : MonoBehaviour {
 	private Rigidbody body;
 	private Vector3 target;
 	private Vector3 initialPosition;
+	private bool freeFall = false;
 	
 	// Use this for initialization
 	void Start () {
@@ -15,6 +16,9 @@ public class Crate : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (this.freeFall)
+			return;
+
 		float magnitude = this.body.velocity.magnitude;
 		if (magnitude > 0.1f) {
 			float dist = Vector2.Distance (new Vector2 (this.transform.position.x, this.transform.position.z),
@@ -29,6 +33,10 @@ public class Crate : MonoBehaviour {
 
 	public void SetTarget(Vector3 target) {
 		this.target = target;
+	}
+
+	public void EnableFreeFall () {
+		this.freeFall = true;
 	}
 
 	public void Push(Vector3 direction, float power) {
