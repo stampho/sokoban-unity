@@ -12,6 +12,7 @@ public class Crate : MonoBehaviour {
 	void Start () {
 		body = GetComponent<Rigidbody> ();
 		initialPosition = this.transform.position;
+		SetHighLight (false);
 	}
 	
 	// Update is called once per frame
@@ -37,6 +38,10 @@ public class Crate : MonoBehaviour {
 
 	public void EnableFreeFall () {
 		this.freeFall = true;
+	}
+
+	public void SetHighLight (bool enable) {
+		this.light.enabled = enable;
 	}
 
 	public void Push(Vector3 direction, float power) {

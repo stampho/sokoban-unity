@@ -31,6 +31,7 @@ public class Tile : MonoBehaviour {
 			this.renderer.material.SetColor("_Color", Color.red);
 
 			if (this.goal) {
+				crate.SetHighLight(true);
 				Grid grid = this.transform.GetComponentInParent<Grid>();
 				grid.CheckWin();
 			}
@@ -38,8 +39,11 @@ public class Tile : MonoBehaviour {
 	}
 
 	void OnTriggerExit(Collider collider) {
-		if (collider.gameObject.tag == "Crate")
+		if (collider.gameObject.tag == "Crate" && this.goal) {
+			Crate crate = collider.GetComponent<Crate>();
+			crate.SetHighLight(false);
 			this.covered = false;
+		}
 		this.renderer.material.SetColor("_Color", this.color);
 	}
 
