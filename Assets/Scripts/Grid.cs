@@ -40,10 +40,18 @@ public class Grid : MonoBehaviour {
 				if (c == '0')
 					continue;
 
+				if ("twpcg".IndexOf(c) == -1) {
+					Debug.Log("Unknown character in Level Descriptor: " + c);
+					continue;
+				}
+
+
 				Tile newTile = (Tile)Instantiate(tilePrefab, new Vector3(transform.position.x + xOffset, transform.position.y, transform.position.z + zOffset), transform.rotation);
 				newTile.transform.parent = this.transform;
 
 				switch(c) {
+				case 't':
+					break;
 				case 'w':
 					// TODO(pvarga): YPos should be factored out
 					float wallYPos = (wallPrefab.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
