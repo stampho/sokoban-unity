@@ -28,7 +28,6 @@ public class Player : MonoBehaviour {
 		if (hit.gameObject.tag == "Crate") {
 			Crate crate = hit.gameObject.GetComponent<Crate> ();
 
-			float power = 2.0f;
 			float xDirection = hit.moveDirection.x;
 			float zDirection = hit.moveDirection.z;
 			
@@ -42,7 +41,7 @@ public class Player : MonoBehaviour {
 			}
 
 			Vector3 direction = new Vector3 (xDirection, 0.0f, zDirection);
-			crate.Push (direction, power);
+			crate.Push (direction);
 		}
 	}
 

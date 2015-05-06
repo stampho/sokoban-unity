@@ -26,10 +26,11 @@ public class Tile : MonoBehaviour {
 
 		if (collider.gameObject.tag == "Crate") {
 			Crate crate = collider.GetComponent<Crate>();
-			crate.SetTarget(this.transform.position);
 			this.covered = true;
 			this.renderer.material.SetColor("_Color", Color.red);
 
+			// TODO(pvarga): Reduce the size of the Trigger to make possible
+			// to arrive for the crate to the center of the last goal tile
 			if (this.goal) {
 				crate.SetHighLight(true);
 				Grid grid = this.transform.GetComponentInParent<Grid>();
