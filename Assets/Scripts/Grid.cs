@@ -56,7 +56,6 @@ public class Grid : MonoBehaviour {
 					// TODO(pvarga): YPos should be factored out
 					float wallYPos = (wallPrefab.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
 					Instantiate (wallPrefab, new Vector3(newTile.transform.position.x, wallYPos, newTile.transform.position.z), transform.rotation);
-					newTile.SetAsCovered ();
 					break;
 				case 'p':
 					// TODO(pvarga): YPos should be factored out
@@ -68,6 +67,7 @@ public class Grid : MonoBehaviour {
 					float crateYPos = (player.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
 					Crate crate = (Crate)Instantiate (cratePrefab, new Vector3(newTile.transform.position.x, crateYPos, newTile.transform.position.z), transform.rotation);
 					this.crateList.Add (crate);
+					newTile.SetCrateAbove (crate);
 					break;
 				case 'g':
 					this.goalTileList.Add(newTile);
@@ -81,7 +81,7 @@ public class Grid : MonoBehaviour {
 		}
 	}
 
-	public bool CheckWin () {
+	public bool CheckCompleted () {
 		foreach (Tile tile in this.goalTileList) {
 			if (!tile.isCovered ())
 				return false;
@@ -90,11 +90,12 @@ public class Grid : MonoBehaviour {
 		Debug.Log ("YOU WON!");
 		foreach (Tile tile in this.goalTileList) {
 			tile.rigidbody.isKinematic = false;
+			tile.rigidbody.constraints = RigidbodyConstraints.None;
 			tile.rigidbody.AddForce (new Vector3(0.0f, -1.0f, 0.0f));
 		}
 
 		foreach (Crate crate in this.crateList) {
-			crate.EnableFreeFall();
+			crate.rigidbody.isKinematic = false;
 			crate.rigidbody.constraints = RigidbodyConstraints.None;
 		}
 

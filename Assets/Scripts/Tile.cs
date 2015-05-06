@@ -5,16 +5,28 @@ public class Tile : MonoBehaviour {
 
 	private Color color = Color.white;
 	private bool goal = false;
-	private bool covered = false;
+	private bool checkPerformed = true;
+
+	private Crate crateAbove = null;
+	private Grid grid;
 
 	// Use this for initialization
 	void Start () {
-
+		this.grid = this.transform.GetComponentInParent<Grid>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (this.goal && this.crateAbove != null) {
+			this.crateAbove.light.enabled = true;
+			if (!this.checkPerformed
+				&& this.crateAbove.transform.position.x == this.transform.position.x
+			    && this.crateAbove.transform.position.z == this.transform.position.z) {
+
+				grid.CheckCompleted ();
+				this.checkPerformed = true;
+			}
+		}
 	}
 	
 	void OnTriggerEnter(Collider collider) {
@@ -25,35 +37,28 @@ public class Tile : MonoBehaviour {
 		}
 
 		if (collider.gameObject.tag == "Crate") {
-			Crate crate = collider.GetComponent<Crate>();
-			this.covered = true;
+			this.crateAbove = collider.GetComponent<Crate>();
+			this.checkPerformed = false;
 			this.renderer.material.SetColor("_Color", Color.red);
-
-			// TODO(pvarga): Reduce the size of the Trigger to make possible
-			// to arrive for the crate to the center of the last goal tile
-			if (this.goal) {
-				crate.SetHighLight(true);
-				Grid grid = this.transform.GetComponentInParent<Grid>();
-				grid.CheckWin();
-			}
 		}
 	}
 
 	void OnTriggerExit(Collider collider) {
-		if (collider.gameObject.tag == "Crate" && this.goal) {
-			Crate crate = collider.GetComponent<Crate>();
-			crate.SetHighLight(false);
-			this.covered = false;
+		if (collider.gameObject.tag == "Crate") {
+			if (this.goal)
+				this.crateAbove.light.enabled = false;
+			this.crateAbove = null;
 		}
 		this.renderer.material.SetColor("_Color", this.color);
 	}
 
-	public void SetAsCovered() {
-		this.covered = true;
+	public void SetCrateAbove(Crate crate) {
+		this.crateAbove = crate;
+		this.crateAbove.light.enabled = true;
 	}
 
 	public bool isCovered() {
-		return this.covered;
+		return this.crateAbove != null;
 	}
 
 	public void SetAsGoal() {

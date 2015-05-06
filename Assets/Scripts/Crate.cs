@@ -8,7 +8,7 @@ public class Crate : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		SetHighLight (false);
+		this.light.enabled = false;
 		this.targetPosition = this.transform.position;
 	}
 	
@@ -28,14 +28,6 @@ public class Crate : MonoBehaviour {
 			float step = 3.5f * Time.deltaTime;
 			this.transform.position = Vector3.MoveTowards (this.transform.position, this.targetPosition, step);
 		}
-	}
-
-	public void EnableFreeFall () {
-		this.rigidbody.isKinematic = false;
-	}
-
-	public void SetHighLight (bool enable) {
-		this.light.enabled = enable;
 	}
 
 	public void Push(Vector3 direction) {
