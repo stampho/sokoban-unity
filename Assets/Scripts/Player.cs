@@ -18,10 +18,13 @@ public class Player : MonoBehaviour {
 		float speed = 2.5f;
 
 		moveDirection = new Vector3 (Input.GetAxis ("Horizontal"), 0.0f, Input.GetAxis ("Vertical"));
-		moveDirection = this.transform.TransformDirection (moveDirection);
 		moveDirection *= speed;
-
 		controller.Move (moveDirection * Time.deltaTime);
+
+		float rotateX = Time.deltaTime * 100.0f * moveDirection.z;
+		float rotateZ = Time.deltaTime * 100.0f * moveDirection.x;
+		this.transform.Rotate (new Vector3 (rotateX, 0, rotateZ));
+
 	}
 
 	public void OnControllerColliderHit(ControllerColliderHit hit) {
