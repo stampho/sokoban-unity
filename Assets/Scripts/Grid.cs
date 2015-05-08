@@ -53,19 +53,13 @@ public class Grid : MonoBehaviour {
 				case 't':
 					break;
 				case 'w':
-					// TODO(pvarga): YPos should be factored out
-					float wallYPos = (wallPrefab.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
-					Instantiate (wallPrefab, new Vector3(newTile.transform.position.x, wallYPos, newTile.transform.position.z), transform.rotation);
+					Instantiate (wallPrefab, this.calcPos(wallPrefab.gameObject, newTile), transform.rotation);
 					break;
 				case 'p':
-					// TODO(pvarga): YPos should be factored out
-					float playerYPos = (player.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
-					player.SetPosition(new Vector3(newTile.transform.position.x, playerYPos, newTile.transform.position.z));
+					player.SetPosition(this.calcPos (player.gameObject, newTile));
 					break;
 				case 'c':
-					// TODO(pvarga): YPos should be factored out
-					float crateYPos = (player.renderer.bounds.size.y / 2) + (newTile.renderer.bounds.size.y / 2);
-					Crate crate = (Crate)Instantiate (cratePrefab, new Vector3(newTile.transform.position.x, crateYPos, newTile.transform.position.z), transform.rotation);
+					Crate crate = (Crate)Instantiate (cratePrefab, this.calcPos (cratePrefab.gameObject, newTile), transform.rotation);
 					this.crateList.Add (crate);
 					newTile.SetCrateAbove (crate);
 					break;
@@ -100,6 +94,11 @@ public class Grid : MonoBehaviour {
 		}
 
 		return true;
+	}
+
+	private Vector3 calcPos(GameObject obj, Tile tile) {
+		float objYPos = (obj.renderer.bounds.size.y / 2) + (tile.renderer.bounds.size.y / 2);
+		return new Vector3(tile.transform.position.x, objYPos, tile.transform.position.z);
 	}
 
 	// Update is called once per frame
