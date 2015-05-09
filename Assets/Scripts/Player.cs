@@ -14,6 +14,9 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		if (GameManager.instance.IsMenuVisible ())
+			return;
+
 		Vector3 moveDirection = Vector3.zero;
 		float speed = 2.5f;
 
@@ -24,7 +27,6 @@ public class Player : MonoBehaviour {
 		float rotateX = Time.deltaTime * 100.0f * moveDirection.z;
 		float rotateZ = Time.deltaTime * 100.0f * moveDirection.x;
 		this.transform.Rotate (new Vector3 (rotateX, 0, rotateZ));
-
 	}
 
 	public void OnControllerColliderHit(ControllerColliderHit hit) {

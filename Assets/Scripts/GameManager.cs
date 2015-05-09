@@ -11,6 +11,9 @@ public class GameManager : MonoBehaviour {
 	private static GameManager _instance;
 
 	private Dictionary<int, string> levels;
+	private int currentLevel = 1;
+	private GameObject menuContainer;
+	private bool inGame;
 
 	public static GameManager instance {
 		get {
@@ -28,7 +31,11 @@ public class GameManager : MonoBehaviour {
 			return;
 		}
 		DontDestroyOnLoad (this);
+
+		menuContainer = GameObject.Find ("MenuContainer");
 		CollectLevels ();
+		UpdateLevelLabel ();
+		UpdateLevelButtons ();
 	}
 
 	private void CollectLevels() {
@@ -44,15 +51,46 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
-	private void loadLevel(int level) {
-		if (!this.levels.ContainsKey (level))
-			level = 1;
+	private void UpdateLevelLabel() {
+		Text levelLabel = GameObject.Find ("LevelLabel").GetComponent<Text> ();
+		levelLabel.text = levels [currentLevel];
+	}
+
+	private void LoadLevel(int level) {
+		if (!HasLevel (level))
+			return;
 
 		Application.LoadLevel (this.levels [level]);
 	}
 
+	private void UpdateLevelButtons() {
+		Button nextButton = GameObject.Find ("NextButton").GetComponent<Button>();
+		nextButton.interactable = HasLevel (currentLevel + 1);
+
+		Button prevButton = GameObject.Find ("PrevButton").GetComponent<Button>();
+		prevButton.interactable = HasLevel (currentLevel - 1);
+	}
+
+	private bool HasLevel(int level) {
+		return this.levels.ContainsKey (level);
+	}
+
+	public void ShowMenu() {
+		menuContainer.SetActive (true);
+		Button hideButton = GameObject.Find ("HideButton").GetComponent<Button> ();
+		hideButton.interactable = inGame;
+	}
+
+	public void HideMenu() {
+		menuContainer.SetActive (false);
+	}
+
+	public bool IsMenuVisible() {
+		return menuContainer.activeSelf;
+	}
+
 	public void Restart() {
-		Application.LoadLevel (Application.loadedLevelName);
+		LoadLevel (currentLevel);
 	}
 
 	public void UpdateMoveCounter(int counter) {
@@ -61,7 +99,37 @@ public class GameManager : MonoBehaviour {
 	}
 
 	public void LevelCompleted() {
-		int next = Application.loadedLevel + 1;
-		Application.LoadLevel (next);
+		inGame = false;
+		ShowMenu ();
+	}
+
+	public void NewGame() {
+		Restart ();
+		HideMenu ();
+		inGame = true;
+	}
+
+	public void Quit() {
+		Application.Quit ();
+	}
+
+	public void NextLevel() {
+		if (!HasLevel (currentLevel + 1))
+		    return;
+
+		currentLevel++;
+		UpdateLevelLabel ();
+		UpdateLevelButtons ();
+		LoadLevel (currentLevel);
+	}
+
+	public void PrevLevel() {
+		if (!HasLevel (currentLevel - 1))
+			return;
+
+		currentLevel--;
+		UpdateLevelLabel ();
+		UpdateLevelButtons ();
+		LoadLevel (currentLevel);
 	}
 }
