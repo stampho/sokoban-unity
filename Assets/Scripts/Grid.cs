@@ -45,7 +45,6 @@ public class Grid : MonoBehaviour {
 					continue;
 				}
 
-
 				Tile newTile = (Tile)Instantiate(tilePrefab, new Vector3(transform.position.x + xOffset, transform.position.y, transform.position.z + zOffset), transform.rotation);
 				newTile.transform.parent = this.transform;
 
@@ -81,7 +80,6 @@ public class Grid : MonoBehaviour {
 				return false;
 		}
 
-		Debug.Log ("YOU WON!");
 		foreach (Tile tile in this.goalTileList) {
 			tile.rigidbody.isKinematic = false;
 			tile.rigidbody.constraints = RigidbodyConstraints.None;
@@ -93,6 +91,7 @@ public class Grid : MonoBehaviour {
 			crate.rigidbody.constraints = RigidbodyConstraints.None;
 		}
 
+		GameManager.instance.LevelCompleted ();
 		return true;
 	}
 

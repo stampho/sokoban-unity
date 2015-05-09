@@ -48,15 +48,11 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public void OnGUI() {
-		GUI.Label (new Rect (0, 0, 100, 100), "Moves: " + counter);
-	}
-
 	public void SetPosition(Vector3 position) {
 		this.transform.position = position;
 	}
 
 	public void Moved() {
-		this.counter++;
+		GameManager.instance.UpdateMoveCounter (++counter);
 	}
 }
