@@ -40,7 +40,7 @@ public class Grid : MonoBehaviour {
 				if (c == '0')
 					continue;
 
-				if ("twpcg".IndexOf(c) == -1) {
+				if ("twpcgq".IndexOf(c) == -1) {
 					Debug.Log("Unknown character in Level Descriptor: " + c);
 					continue;
 				}
@@ -57,15 +57,25 @@ public class Grid : MonoBehaviour {
 				case 'p':
 					player.SetPosition(this.calcPos (player.gameObject, newTile));
 					break;
-				case 'c':
+				case 'c': {
 					Crate crate = (Crate)Instantiate (cratePrefab, this.calcPos (cratePrefab.gameObject, newTile), transform.rotation);
 					this.crateList.Add (crate);
 					newTile.SetCrateAbove (crate);
 					break;
+				}
 				case 'g':
 					this.goalTileList.Add(newTile);
 					newTile.SetAsGoal ();
 					break;
+				case 'q':{
+					Crate crate = (Crate)Instantiate (cratePrefab, this.calcPos (cratePrefab.gameObject, newTile), transform.rotation);
+					this.crateList.Add (crate);
+
+					this.goalTileList.Add(newTile);
+					newTile.SetAsGoal ();
+					newTile.SetCrateAbove (crate);
+					break;
+				}
 				}
 			}
 
