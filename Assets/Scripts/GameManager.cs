@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour {
 	private Dictionary<int, string> levels;
 	private int currentLevel = 1;
 	private bool inGame;
+	private bool tileLight = false;
 
 	public static GameManager instance {
 		get {
@@ -106,5 +107,13 @@ public class GameManager : MonoBehaviour {
 
 	public UI GetUI() {
 		return this.ui;
+	}
+
+	public void EnableTileLight(bool enable) {
+		this.tileLight = enable;
+	}
+
+	public bool IsTileLightEnabled() {
+		return this.tileLight;
 	}
 }

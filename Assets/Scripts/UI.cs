@@ -72,6 +72,10 @@ public class UI : MonoBehaviour {
 		UpdateLevelButtons ();
 	}
 
+	public void TileLightValueChanged(bool value) {
+		GameManager.instance.EnableTileLight (value);
+	}
+
 	public void HideButtonPushed() {
 		HideMenu ();
 	}

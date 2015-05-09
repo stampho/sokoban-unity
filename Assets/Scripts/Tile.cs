@@ -33,13 +33,15 @@ public class Tile : MonoBehaviour {
 		if (collider.gameObject.tag == "Player") {
 			Player player = collider.GetComponent<Player>();
 			player.Moved();
-			this.renderer.material.SetColor("_Color", Color.green);
+			if (GameManager.instance.IsTileLightEnabled())
+				this.renderer.material.SetColor("_Color", Color.green);
 		}
 
 		if (collider.gameObject.tag == "Crate") {
 			this.crateAbove = collider.GetComponent<Crate>();
 			this.checkPerformed = false;
-			this.renderer.material.SetColor("_Color", Color.red);
+			if (GameManager.instance.IsTileLightEnabled())
+				this.renderer.material.SetColor("_Color", Color.red);
 		}
 	}
 
