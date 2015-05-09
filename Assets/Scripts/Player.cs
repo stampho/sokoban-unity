@@ -14,7 +14,7 @@ public class Player : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (GameManager.instance.IsMenuVisible ())
+		if (GameManager.instance.GetUI ().IsMenuVisible())
 			return;
 
 		Vector3 moveDirection = Vector3.zero;
@@ -55,6 +55,6 @@ public class Player : MonoBehaviour {
 	}
 
 	public void Moved() {
-		GameManager.instance.UpdateMoveCounter (++counter);
+		GameManager.instance.GetUI ().UpdateMoveCounter (++counter);
 	}
 }

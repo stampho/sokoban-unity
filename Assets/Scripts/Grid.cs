@@ -99,9 +99,4 @@ public class Grid : MonoBehaviour {
 		float objYPos = (obj.renderer.bounds.size.y / 2) + (tile.renderer.bounds.size.y / 2);
 		return new Vector3(tile.transform.position.x, objYPos, tile.transform.position.z);
 	}
-
-	// Update is called once per frame
-	void Update () {
-
-	}
 }

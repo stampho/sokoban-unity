@@ -8,11 +8,13 @@ using System.Text.RegularExpressions;
 
 public class GameManager : MonoBehaviour {
 
+	public UI uiPrefab;
+
 	private static GameManager _instance;
 
+	private UI ui;
 	private Dictionary<int, string> levels;
 	private int currentLevel = 1;
-	private GameObject menuContainer;
 	private bool inGame;
 
 	public static GameManager instance {
@@ -32,28 +34,24 @@ public class GameManager : MonoBehaviour {
 		}
 		DontDestroyOnLoad (this);
 
-		menuContainer = GameObject.Find ("MenuContainer");
-		CollectLevels ();
-		UpdateLevelLabel ();
-		UpdateLevelButtons ();
+		this.ui = (UI)Instantiate (this.uiPrefab);
+		DontDestroyOnLoad (this.ui);
+
+		this.levels = CollectLevels();
 	}
 
-	private void CollectLevels() {
-		this.levels = new Dictionary<int, string> ();
+	private Dictionary<int, string> CollectLevels() {
+		Dictionary<int, string> levels = new Dictionary<int, string> ();
 		string[] guids = AssetDatabase.FindAssets ("*", new string[1] {"Assets/_Scenes"});
 		foreach (string guid in guids) {
 			string levelPath = AssetDatabase.GUIDToAssetPath(guid);
 			Regex regex = new Regex(@"^.+/(level(\d+))\.unity");
 			Match match = regex.Match(levelPath);
-			if (match.Success) {
-				this.levels.Add(Convert.ToInt32 (match.Groups[2].Value.ToString()), match.Groups[1].Value);
-			}
+			if (match.Success)
+				levels.Add(Convert.ToInt32 (match.Groups[2].Value.ToString()), match.Groups[1].Value);
 		}
-	}
 
-	private void UpdateLevelLabel() {
-		Text levelLabel = GameObject.Find ("LevelLabel").GetComponent<Text> ();
-		levelLabel.text = levels [currentLevel];
+		return levels;
 	}
 
 	private void LoadLevel(int level) {
@@ -63,73 +61,50 @@ public class GameManager : MonoBehaviour {
 		Application.LoadLevel (this.levels [level]);
 	}
 
-	private void UpdateLevelButtons() {
-		Button nextButton = GameObject.Find ("NextButton").GetComponent<Button>();
-		nextButton.interactable = HasLevel (currentLevel + 1);
-
-		Button prevButton = GameObject.Find ("PrevButton").GetComponent<Button>();
-		prevButton.interactable = HasLevel (currentLevel - 1);
-	}
-
-	private bool HasLevel(int level) {
+	public bool HasLevel(int level) {
 		return this.levels.ContainsKey (level);
 	}
 
-	public void ShowMenu() {
-		menuContainer.SetActive (true);
-		Button hideButton = GameObject.Find ("HideButton").GetComponent<Button> ();
-		hideButton.interactable = inGame;
-	}
-
-	public void HideMenu() {
-		menuContainer.SetActive (false);
-	}
-
-	public bool IsMenuVisible() {
-		return menuContainer.activeSelf;
-	}
-
 	public void Restart() {
+		inGame = true;
 		LoadLevel (currentLevel);
-	}
-
-	public void UpdateMoveCounter(int counter) {
-		Text moveCounter = GameObject.Find ("MoveCounter").GetComponent<Text>();
-		moveCounter.text = counter.ToString();
 	}
 
 	public void LevelCompleted() {
 		inGame = false;
-		ShowMenu ();
+		// Force to show menu
+		this.ui.MenuButtonPushed ();
 	}
 
-	public void NewGame() {
-		Restart ();
-		HideMenu ();
-		inGame = true;
-	}
-
-	public void Quit() {
-		Application.Quit ();
-	}
-
-	public void NextLevel() {
+	public string NextLevel() {
 		if (!HasLevel (currentLevel + 1))
-		    return;
+		    return levels[currentLevel];
 
-		currentLevel++;
-		UpdateLevelLabel ();
-		UpdateLevelButtons ();
-		LoadLevel (currentLevel);
+		LoadLevel (++currentLevel);
+		return levels[currentLevel];
 	}
 
-	public void PrevLevel() {
+	public string PrevLevel() {
 		if (!HasLevel (currentLevel - 1))
-			return;
+			return levels[currentLevel];
 
-		currentLevel--;
-		UpdateLevelLabel ();
-		UpdateLevelButtons ();
-		LoadLevel (currentLevel);
+		LoadLevel (--currentLevel);
+		return levels[currentLevel];
+	}
+
+	public string GetCurrentLevelName() {
+		return levels[currentLevel];
+	}
+
+	public int GetCurrentLevel() {
+		return currentLevel;
+	}
+
+	public bool IsInGame() {
+		return this.inGame;
+	}
+
+	public UI GetUI() {
+		return this.ui;
 	}
 }
