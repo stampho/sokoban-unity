@@ -9,10 +9,13 @@ using System.Text.RegularExpressions;
 public class GameManager : MonoBehaviour {
 
 	public UI uiPrefab;
+	public Light lightPrefab;
 
 	private static GameManager _instance;
 
 	private UI ui;
+	private Light light;
+
 	private Dictionary<int, string> levels;
 	private int currentLevel = 1;
 	private bool inGame;
@@ -37,6 +40,9 @@ public class GameManager : MonoBehaviour {
 
 		this.ui = (UI)Instantiate (this.uiPrefab);
 		DontDestroyOnLoad (this.ui);
+
+		this.light = (Light)Instantiate (this.lightPrefab);
+		DontDestroyOnLoad (this.light);
 
 		this.levels = CollectLevels();
 	}
@@ -115,5 +121,9 @@ public class GameManager : MonoBehaviour {
 
 	public bool IsTileLightEnabled() {
 		return this.tileLight;
+	}
+
+	public void EnableShadow(bool enable) {
+		this.light.shadows = enable ? LightShadows.Hard : LightShadows.None;
 	}
 }

@@ -76,6 +76,10 @@ public class UI : MonoBehaviour {
 		GameManager.instance.EnableTileLight (value);
 	}
 
+	public void ShadowValueChanged(bool value) {
+		GameManager.instance.EnableShadow (value);
+	}
+
 	public void HideButtonPushed() {
 		HideMenu ();
 	}
