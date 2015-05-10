@@ -101,7 +101,7 @@ public class Grid : MonoBehaviour {
 			crate.rigidbody.constraints = RigidbodyConstraints.None;
 		}
 
-		GameManager.instance.LevelCompleted ();
+		GameManager.instance.LevelCompleted (player.GetCounter());
 		return true;
 	}
 

@@ -57,4 +57,8 @@ public class Player : MonoBehaviour {
 	public void Moved() {
 		GameManager.instance.GetUI ().UpdateMoveCounter (++counter);
 	}
+
+	public int GetCounter() {
+		return this.counter;
+	}
 }

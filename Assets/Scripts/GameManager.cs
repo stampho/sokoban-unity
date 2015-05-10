@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 using UnityEditor;
 using System;
 using System.Collections;
@@ -17,6 +16,8 @@ public class GameManager : MonoBehaviour {
 	private Light light;
 
 	private Dictionary<int, string> levels;
+	private Dictionary<int, int> bestScores;
+
 	private int currentLevel = 1;
 	private bool inGame;
 	private bool tileLight = false;
@@ -45,6 +46,7 @@ public class GameManager : MonoBehaviour {
 		DontDestroyOnLoad (this.light);
 
 		this.levels = CollectLevels();
+		this.bestScores = LoadBestScores ();
 	}
 
 	private Dictionary<int, string> CollectLevels() {
@@ -59,6 +61,15 @@ public class GameManager : MonoBehaviour {
 		}
 
 		return levels;
+	}
+
+	private Dictionary<int, int> LoadBestScores() {
+		Dictionary<int, int> bestScores = new Dictionary<int, int> ();
+		foreach (int key in this.levels.Keys) {
+			bestScores.Add(key, 999);
+		}
+
+		return bestScores;
 	}
 
 	private void LoadLevel(int level) {
@@ -77,10 +88,13 @@ public class GameManager : MonoBehaviour {
 		LoadLevel (currentLevel);
 	}
 
-	public void LevelCompleted() {
+	public void LevelCompleted(int playerScore) {
 		inGame = false;
-		// Force to show menu
-		this.ui.MenuButtonPushed ();
+		int bestScore = this.bestScores [currentLevel];
+		if (bestScore > playerScore)
+			this.bestScores [currentLevel] = playerScore;
+
+		this.ui.ShowWinDialog (playerScore, bestScore);
 	}
 
 	public string NextLevel() {

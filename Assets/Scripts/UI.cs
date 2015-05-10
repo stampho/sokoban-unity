@@ -5,9 +5,15 @@ using System.Collections;
 public class UI : MonoBehaviour {
 
 	private GameObject menuContainer;
+	private GameObject menu;
+	private GameObject winDialog;
 
 	void Start() {
 		this.menuContainer = GameObject.Find ("MenuContainer");
+		this.menu = GameObject.Find ("Menu");
+		this.winDialog = GameObject.Find ("WinDialog");
+
+		this.winDialog.SetActive (false);
 
 		UpdateLevelLabel (GameManager.instance.GetCurrentLevelName());
 		UpdateLevelButtons ();
@@ -30,6 +36,8 @@ public class UI : MonoBehaviour {
 
 	private void ShowMenu() {
 		menuContainer.SetActive (true);
+		this.winDialog.SetActive (false);
+		this.menu.SetActive (true);
 		Button hideButton = GameObject.Find ("HideButton").GetComponent<Button> ();
 		hideButton.interactable = GameManager.instance.IsInGame ();
 	}
@@ -45,6 +53,24 @@ public class UI : MonoBehaviour {
 	public void UpdateMoveCounter(int counter) {
 		Text moveCounter = GameObject.Find ("MoveCounter").GetComponent<Text>();
 		moveCounter.text = counter.ToString();
+	}
+
+	public void ShowWinDialog(int playerScore, int bestScore) {
+		menuContainer.SetActive (true);
+		this.menu.SetActive (false);
+		this.winDialog.SetActive (true);
+
+		Text playerScoreText = GameObject.Find ("PlayerScore").GetComponent<Text> ();
+		playerScoreText.text = playerScore.ToString ();
+		Text bestScoreText = GameObject.Find ("BestScore").GetComponent<Text> ();
+		bestScoreText.text = bestScore.ToString ();
+
+		Text messageText = GameObject.Find ("MessageText").GetComponent<Text> ();
+		if (playerScore < bestScore) {
+			messageText.text = "Congratulations!\nThe new best score is yours.";
+		} else {
+			messageText.text = "";
+		}
 	}
 
 	public void RestartButtonPushed() {
