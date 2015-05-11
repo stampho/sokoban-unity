@@ -17,7 +17,7 @@ public class Grid : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		// Parse TextAsset
-		string[] lines = levelDescriptor.text.Split("\n"[0]);
+		string[] lines = levelDescriptor.text.Split('\n');
 		foreach (string line in lines) {
 			if (!string.IsNullOrEmpty(line)) {
 				levelMap.Add(new ArrayList(line.ToCharArray ()));
